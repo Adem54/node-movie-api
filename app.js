@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const indexRouter = require("./routes/index");
 const moviesRouter = require("./routes/movie");
+const directorRouter=require("./routes/director")
 
 
 //body-parser modülü express in içerisinde gelir ama bu şekilde çağırdıktan sonra kullanabiliriz
@@ -46,6 +47,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/api/movies", moviesRouter);
+app.use("/api/directors",directorRouter);
 
 // catch 404 and forward to error handler
 
