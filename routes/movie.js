@@ -7,11 +7,25 @@ const { Movie } = require("../modules");
 const mongoose=require("mongoose")
 const {ObjectId}=mongoose.Types
 
-//Tüm filmleri veren endpointin yazılması
+//Tüm filmleri directors leri ile birlikte  veren endpointin yazılması
 router.get("/",async (req,res)=>{
    //bu şekilde tamamını getirebiliriz
   try {
-    const data=await Movie.find({})//.exec() ile bize bir promise dönecektir
+    const data=await Movie.aggregate([
+      {
+        $lookup:{
+          from:"directors",
+          localField:"director_id",
+          foreignField:"_id",
+          as:"director"
+        }
+      },
+      {
+        $unwind:{
+          path:"$director"
+        }
+      }
+    ])//.exec() ile bize bir promise dönecektir
     res.json(data)  
   } catch (error) {
     res.status(500).send(err);
