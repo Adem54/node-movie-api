@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const mongoose=require("mongoose");
-const {ObjectId}=mongoose.Types;
+const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Types;
 
 const { Director } = require("../modules");
 
@@ -51,59 +51,73 @@ router.get("/", (req, res) => {
     .catch(error => res.json(error));
 });
 
-///api/directors/:director_id	  Aradığımız bir director un verilerini filmleri ile beraber  getirilmesi 
+///api/directors/:director_id	  Aradığımız bir director un verilerini filmleri ile beraber  getirilmesi
 
 router.get("/:director_id", async (req, res) => {
   try {
-      const {director_id}=req.params
-    const data =await Director.aggregate([
-        
-        {
-          $lookup: {
-            from: "movies",
-            localField: "_id",
-            foreignField: "director_id",
-            as: "movies"
-          }
-        },
-        {
-          $unwind: {
-            path: "$movies",
-            preserveNullAndEmptyArrays: true
-          }
-        },
-        {
-          $group: {
-            _id: {
-              _id: "$_id",
-              name: "$name",
-              surname: "$surname"
-            },
-            movies: {
-              $push: "$movies"
-            }
-          }
-        },
-        {
-          $project: {
-            _id: "$_id._id",
-            name: "$_id.name",
-            surname: "$_id.surname",
-            bio: "$_id.bio",
-            movies: "$movies"
-          }
-        },{
-            $match:{//Burda id yi bizim object_id tipinde yollamamız gerekiyor
-                _id:ObjectId(director_id)
-            }
+    const { director_id } = req.params;
+    const data = await Director.aggregate([
+      {
+        $lookup: {
+          from: "movies",
+          localField: "_id",
+          foreignField: "director_id",
+          as: "movies"
         }
-      ]);
-     res.json(data)
+      },
+      {
+        $unwind: {
+          path: "$movies",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $group: {
+          _id: {
+            _id: "$_id",
+            name: "$name",
+            surname: "$surname"
+          },
+          movies: {
+            $push: "$movies"
+          }
+        }
+      },
+      {
+        $project: {
+          _id: "$_id._id",
+          name: "$_id.name",
+          surname: "$_id.surname",
+          bio: "$_id.bio",
+          movies: "$movies"
+        }
+      },
+      {
+        $match: {
+          //Burda id yi bizim object_id tipinde yollamamız gerekiyor
+          _id: ObjectId(director_id)
+        }
+      }
+    ]);
+    res.json(data);
   } catch (error) {
-      res.json(error)
+    res.json(error);
   }
+});
 
-})
+///api/directors/:director_id	  ile put işlemi yapma
+
+router.put("/:director_id", async (req, res) => {
+  try {
+    const { director_id } = req.params;
+    const data = await Director.findByIdAndUpdate(director_id, req.body, {
+      new: true
+    });
+    res.json(data);
+  } catch (error) {
+    res.json(error);
+  }
+});
 
 //api/directors yöntemen ekleyen post endpointinin yazılması
 router.post("/", async (req, res, next) => {
@@ -118,7 +132,6 @@ router.post("/", async (req, res, next) => {
 });
 
 module.exports = router;
-
 
 //group ve project i iyice anlaayalım iyice bakalım
 
