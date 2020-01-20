@@ -119,6 +119,17 @@ router.put("/:director_id", async (req, res) => {
   }
 });
 
+///api/directors/:director_id ile silme işleminin yapılması
+router.delete("/:director_id", async (req, res) => {
+  const { director_id } = req.params;
+  try {
+    const data =await Director.findByIdAndRemove(director_id);
+    res.json(data);
+  } catch (error) {
+    res.json(error);
+  }
+});
+
 //api/directors yöntemen ekleyen post endpointinin yazılması
 router.post("/", async (req, res, next) => {
   const director = new Director(req.body);
