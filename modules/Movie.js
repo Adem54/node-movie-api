@@ -8,12 +8,16 @@ const MovieSchema=new Schema({
 director_id:ObjectId,//Burası ObjectId olmalı çünkü director collectionundaki id ile join işlemi çakıştırma işlemi yapacağız
 title:{ 
     type:String,
-    required:true
+    required:[true,'`{PATH}` alanı zorunludur'],//biz eğer bu alan yazılmadığında bir mesaj vermek istersek o zaman bu veriyi dizi  olarak yazarız.{PATH} demek title demektir yani properties adı {PATH} demektir
+    maxlength:[20,'`{PATH}` alanı (`{VALUE}`), `{MAXLENGTH}` karakterinden küçük olmalıdır'],
+    minlength:[5,'`{PATH}` alanı (`{VALUE}`), `{MINLENGTH}` karakterinden büyük olmalıdır']
 },
-category:String,
+category:{type:String,
+maxlength:30,//Bu şekilde de kullanabilirz yukardaki gibi de kullanabiliriz
+minlength:4},
 country:String,
-year:Number,
-imdb_score:Number,//imdb puan ortalaması
+year:{type:Number,max:2020,min:1980},
+imdb_score:{type:Number,max:50,min:10},//imdb puan ortalaması
 createdAt:{
     type:Date,
     default:Date.now

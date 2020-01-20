@@ -118,7 +118,7 @@ router.post("/", async (req, res, next) => {
     res.json(promise);
     //res.send(movie.category)
   } catch (error) {
-    res.status(500).send(err);
+    res.status(500).send(error);
   }
 });
 
