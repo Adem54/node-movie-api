@@ -4,6 +4,8 @@ var router = express.Router();
 const {ErrorHandler}=require("../helper/error");
 //Şimdi verimizi ekleyelim
 const { Movie } = require("../modules");
+const mongoose=require("mongoose")
+const {ObjectId}=mongoose.Types
 
 //Tüm filmleri veren endpointin yazılması
 router.get("/",async (req,res)=>{
@@ -16,7 +18,6 @@ router.get("/",async (req,res)=>{
   }
 
 })
-
 
 //Biz bu top10 endpointini eğer üstte id ye göre getiren get methodu ile çakışıyor ondan dolayı bizim burda url de postman da top10 yazınca onu id gibi algılayıp hata veriyor ondan dolayı biz bu endpointi eğer o id ye göre getiren get methodunun üzerine yazarsak onu ezecektir ve çalışacaktır
 //top 10 endopointinin yazılması
@@ -100,7 +101,7 @@ router.post("/", async (req, res, next) => {
   const movie = new Movie(req.body);
   try {
     const promise = await movie.save();
-    res.json(promise.country);
+    res.json(promise);
     //res.send(movie.category)
   } catch (error) {
     res.status(500).send(err);

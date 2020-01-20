@@ -6,7 +6,7 @@ const {String,Number,ObjectId}=Schema.Types
 
 const MovieSchema=new Schema({
 director_id:ObjectId,//Burası ObjectId olmalı çünkü director collectionundaki id ile join işlemi çakıştırma işlemi yapacağız
-title:{
+title:{ 
     type:String,
     required:true
 },
@@ -22,5 +22,5 @@ createdAt:{
 
 //Biz router da promise kullanmak için burda promise tanımlaması yaparak global Promise kullanabiliriz bu doğrudan mongoose ta olan bir fonksiyon
 mongoose.Promise=global.Promise
-module.exports=mongoose.model("movie",MovieSchema);
-//"movie" ismi collection ismimiz
+module.exports=mongoose.model("movies",MovieSchema);
+//"movie" ismi collection ismimiz ancak bu movie ismi mongodb de çoğul olarak yazılır ondan dolayı en iyisi bizde burda çoğul yapalım ki sonra root larda işlem yaparken $lookup da collection ismiini yanlış yazınca sonuç alamayız ondan dolayı en başta burda buna dikkat edelimm
